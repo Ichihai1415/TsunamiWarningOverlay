@@ -35,6 +35,9 @@
             public DateTime ReceiveTime { get; set; } = DateTime.MinValue;
             public DateTime AnnouncementTime { get; set; } = DateTime.MinValue;
 
+            public Dictionary<string, TsunamiGrade> AreaDatas { get; set; } = [];
+
+            /*
             public AreaData[] AreaDatas { get; set; } = []; 
 
             public class AreaData
@@ -43,7 +46,7 @@
 
                 public TsunamiGrade Grade { get; set; }
 
-            }
+            }*/
 
 
         }

@@ -118,6 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AreaForecastEEW_GIS_20190125_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AreaForecastEEW_GIS_20190125_01.geojson;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="AreaTsunami_GIS_20240520_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AreaTsunami_GIS_20240520_01.geojson;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
