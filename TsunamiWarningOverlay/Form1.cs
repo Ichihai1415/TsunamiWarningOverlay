@@ -7,29 +7,55 @@ namespace TsunamiWarningOverlay
 {
     public partial class Form1 : Form
     {
+        /// <summary>
+        /// 初期化時処理(1)
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
-            pen_border.LineJoin = LineJoin.Round;
-            pen_Forecast.LineJoin = LineJoin.Round;
-            pen_Watch.LineJoin = LineJoin.Round;
-            pen_Warning.LineJoin = LineJoin.Round;
-            pen_MajorWarning.LineJoin = LineJoin.Round;
-            BackColor = backColor;
+
+
+
+
+
+            //BackColor = backColor;
         }
 
-        internal static Pen pen_border = new(Color.White, 1);
-        internal static Pen pen_Forecast = new(Color.Blue, 3);
-        internal static Pen pen_Watch = new(Color.Yellow, 5);
-        internal static Pen pen_Warning = new(Color.Red, 7);
-        internal static Pen pen_MajorWarning = new(Color.Purple, 9);
+        /// <summary>
+        /// 日本地図用ペン
+        /// </summary>
+        internal static Pen pen_border = new(Color.White, 1) { LineJoin = LineJoin.Round };
 
+        /// <summary>
+        /// 津波予報用ペン
+        /// </summary>
+        internal static Pen pen_Forecast = new(Color.Blue, 3) { LineJoin = LineJoin.Round };
+
+        /// <summary>
+        /// 津波注意報用ペン
+        /// </summary>
+        internal static Pen pen_Watch = new(Color.Yellow, 5) { LineJoin = LineJoin.Round };
+
+        /// <summary>
+        /// 津波警報用ペン
+        /// </summary>
+        internal static Pen pen_Warning = new(Color.Red, 7) { LineJoin = LineJoin.Round };
+
+        /// <summary>
+        /// 大津波警報用ペン
+        /// </summary>
+        internal static Pen pen_MajorWarning = new(Color.Purple, 9) { LineJoin = LineJoin.Round };
+
+        /// <summary>
+        /// 初期化時処理(2)
+        /// </summary>
         private async void Form1_Load(object sender, EventArgs e)
         {
             img_noData = DrawData(new Data());
 
             await GetChangeP2PQData();
                 
+
             //DEBUG
 
             //img_main = DrawData(P2PQ_Json2Data(File.ReadAllText("sample\\20240101-2-65926857f0f6de0007564895.json"))!);
@@ -37,8 +63,24 @@ namespace TsunamiWarningOverlay
             //DisplayStart();
         }
 
+        /// <summary>
+        /// データなしの画像
+        /// </summary>
         internal static Bitmap img_noData = new(600, 600);
+
+        /// <summary>
+        /// データありの画像
+        /// </summary>
         internal static Bitmap img_main = new(600, 600);
+
+        /// <summary>
+        /// 日本線色・文字色(未使用)
+        /// </summary>
+        internal static Color foreColor = Color.FromArgb(255,255,255);
+
+        /// <summary>
+        /// 背景色
+        /// </summary>
         internal static Color backColor = Color.FromArgb(0, 0, 0);
 
         /// <summary>
@@ -53,7 +95,8 @@ namespace TsunamiWarningOverlay
             var bitmap = new Bitmap(600, 600);
             using var g = Graphics.FromImage(bitmap);
             g.Clear(backColor);
-            //欠ける問題これで直らん
+            
+
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.SmoothingMode = SmoothingMode.HighQuality;
 
@@ -204,30 +247,32 @@ namespace TsunamiWarningOverlay
         /// <summary>
         /// P2P地震情報JSON API v2 のデータを取得し表示します。
         /// </summary>
-        /// <returns>終了の可能性があるか</returns>
-        internal async Task<bool> GetChangeP2PQData()
+        internal async Task GetChangeP2PQData()
         {
             var res = await client.GetAsync("https://api.p2pquake.net/v2/history?codes=552&limit=1");
             //var res = await client.GetAsync("https://api-v2-sandbox.p2pquake.net/v2/history?codes=552&limit=1&offset=1");//sandboxテスト
-            if (res == null) return true;
+            if (res == null) return;//基本ない
             var resSt = await res.Content.ReadAsStringAsync();
-            if (resSt == null) return true;
-            //以上returnは通常起こらない
+            if (resSt == null) return;//基本ない
 
-            if (resSt == lastP2PQ_St) return false;//変化なし
+            if (resSt == lastP2PQ_St) return;//変化なしのとき
             lastP2PQ_St = resSt;
-            if (resSt == "[]") return true;
+
+            if (resSt == "[]")//変化ありかつデータなしに
+            {
+                DisplayEnd();
+                return;
+            }
             var data = P2PQ_Json2Data(resSt);
-            if (data == null) return true;
+            if (data == null)//変化ありかつ有効データなし(解除時等)
+            {
+                DisplayEnd();
+                return;
+            }
 
-            img_main = DrawData(data);
+            img_main = DrawData(data);//変化ありかつ切り替え
             DisplayStart();
-            return false;
-        }
-
-        internal void CheckEnd()
-        {
-
+            return;
         }
 
         /// <summary>
@@ -248,7 +293,7 @@ namespace TsunamiWarningOverlay
         }
 
         /// <summary>
-        /// 表示モードであるか
+        /// 点滅で表示モードであるか
         /// </summary>
         internal bool isDisplayON = false;
 
@@ -273,5 +318,3 @@ namespace TsunamiWarningOverlay
         }
     }
 }
-
-
