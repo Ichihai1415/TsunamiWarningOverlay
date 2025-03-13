@@ -55,10 +55,10 @@
 
   <ItemGroup>
     <None Update="sample\20220116-2-61e30a7c02add671afd9648d.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="sample\20240101-2-65926857f0f6de0007564895.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
