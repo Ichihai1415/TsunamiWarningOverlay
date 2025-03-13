@@ -15,10 +15,10 @@ namespace TsunamiWarningOverlay
             pen_Watch.LineJoin = LineJoin.Round;
             pen_Warning.LineJoin = LineJoin.Round;
             pen_MajorWarning.LineJoin = LineJoin.Round;
-            img_noData = DrawData(new Data());
+            //backColor= ;
         }
 
-        internal static Pen pen_border = new(Color.Gray, 1);
+        internal static Pen pen_border = new(Color.White, 1);
         internal static Pen pen_Forecast = new(Color.Blue, 3);
         internal static Pen pen_Watch = new(Color.Yellow, 5);
         internal static Pen pen_Warning = new(Color.Red, 7);
@@ -26,18 +26,25 @@ namespace TsunamiWarningOverlay
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            img_noData = DrawData(new Data());
+            //img_main = DrawData(P2PQ_Json2Data(File.ReadAllText("sample\\20240101-2-65926857f0f6de0007564895.json")));
+            img_main = DrawData(P2PQ_Json2Data(File.ReadAllText("sample\\20220116-2-61e30a7c02add671afd9648d.json")));
+            DisplayON();
         }
 
         internal Bitmap img_noData = new(600, 600);
         internal Bitmap img_main = new(600, 600);
-
+        internal static Color backColor = Color.FromArgb(0, 0, 0);
 
         internal static Bitmap DrawData(Data data)
         {
+            GC.Collect();
             var bitmap = new Bitmap(600, 600);
             using var g = Graphics.FromImage(bitmap);
-            g.Clear(Color.Green);
+            g.Clear(backColor);
+            //欠ける問題これで直らん
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.SmoothingMode = SmoothingMode.HighQuality;
 
             //最初に置いとくと若干いいかもしれない
             using var gp_MajorWarning = new GraphicsPath();
@@ -50,43 +57,53 @@ namespace TsunamiWarningOverlay
             foreach (var json_1 in json_tsunami["features"]!.AsArray())
             {
                 var json_1_geo = json_1!["geometry"]!;
-                if (json_1_geo["coordinates"]!.AsArray().Count == 0)//怪しいかも
+                if (json_1_geo == null)
                     continue;
-                var isArea = data.AreaDatas.TryGetValue((string)json_1_geo["properties"]!["name"]!, out TsunamiGrade grade);
-                var points = new List<Point>();
+                var isArea = data.AreaDatas.TryGetValue((string)json_1["properties"]!["name"]!, out TsunamiGrade grade);
+                var pointsList = new List<List<PointF>>();
                 if ((string)json_1_geo["type"]! == "LineString")
+                {
+                    var points = new List<PointF>();
                     foreach (var json_2 in json_1_geo["coordinates"]!.AsArray())
-                        points.Add(new Point((int)(((double)json_2![0]! - 120) * 20), (int)((50 - (double)json_2[1]!) * 20)));
+                        points.Add(new PointF(((float)json_2![0]! - 120f) * 20f, (50f - (float)json_2[1]!) * 20f));
+                    pointsList.Add(points);
+                }
                 else
                     foreach (var json_2 in json_1_geo["coordinates"]!.AsArray())
-                        foreach (var json_3 in json_2![0]!.AsArray())
-                            points.Add(new Point((int)(((double)json_3![0]! - 120) * 20), (int)((50 - (double)json_3[1]!) * 20)));
-
-                if (points.Count < 2)
-                    continue;
-                if (isArea)
-                    switch (grade)
                     {
-                        case TsunamiGrade.Forecast:
-                            gp_Forecast.StartFigure();
-                            gp_Forecast.AddLines(points.ToArray());
-                            break;
-                        case TsunamiGrade.Watch:
-                            gp_Watch.StartFigure();
-                            gp_Watch.AddLines(points.ToArray());
-                            break;
-                        case TsunamiGrade.Warning:
-                            gp_Warning.StartFigure();
-                            gp_Warning.AddLines(points.ToArray());
-                            break;
-                        case TsunamiGrade.MajorWarning:
-                            gp_MajorWarning.StartFigure();
-                            gp_MajorWarning.AddLines(points.ToArray());
-                            break;
+                        var points = new List<PointF>();
+                        foreach (var json_3 in json_2!.AsArray())
+                            points.Add(new PointF(((float)json_3![0]! - 120f) * 20f, (50f - (float)json_3[1]!) * 20f));
+                        pointsList.Add(points);
                     }
-                gp_border.StartFigure();
-                gp_border.AddLines(points.ToArray());
 
+                foreach (var points in pointsList)
+                {
+                    if (points.Count < 2)
+                        continue;
+                    if (isArea)
+                        switch (grade)
+                        {
+                            case TsunamiGrade.Forecast:
+                                gp_Forecast.StartFigure();
+                                gp_Forecast.AddLines(points.ToArray());
+                                break;
+                            case TsunamiGrade.Watch:
+                                gp_Watch.StartFigure();
+                                gp_Watch.AddLines(points.ToArray());
+                                break;
+                            case TsunamiGrade.Warning:
+                                gp_Warning.StartFigure();
+                                gp_Warning.AddLines(points.ToArray());
+                                break;
+                            case TsunamiGrade.MajorWarning:
+                                gp_MajorWarning.StartFigure();
+                                gp_MajorWarning.AddLines(points.ToArray());
+                                break;
+                        }
+                    gp_border.StartFigure();
+                    gp_border.AddLines(points.ToArray());
+                }
             }
 
             g.DrawPath(pen_Forecast, gp_Forecast);
@@ -98,18 +115,31 @@ namespace TsunamiWarningOverlay
             using var gp_map = new GraphicsPath();
             foreach (var json_1 in json_map["features"]!.AsArray())
             {
-                var points = Array.Empty<Point>();
+                var points = Array.Empty<PointF>();
                 if ((string?)json_1!["geometry"]!["type"] == "Polygon")
-                    points = json_1["geometry"]!["coordinates"]![0]!.AsArray().Select(json_2 => new Point((int)(((double)json_2![0]! - 120) * 20), (int)((50 - (double)json_2[1]!) * 20))).ToArray();
+                {
+                    points = json_1["geometry"]!["coordinates"]![0]!.AsArray().Select(json_2 => new PointF(((float)json_2![0]! - 120f) * 20f, (50f - (float)json_2[1]!) * 20f)).ToArray();
+                    if (points.Length > 2)
+                        gp_map.AddPolygon(points);
+                }
                 else
                     foreach (var json_2 in json_1["geometry"]!["coordinates"]!.AsArray())
-                        points = json_2![0]!.AsArray().Select(json_3 => new Point((int)(((double)json_3![0]! - 120) * 20), (int)((50 - (double)json_3[1]!) * 20))).ToArray();
-                if (points.Length > 2)
-                    gp_map.AddPolygon(points);
+                    {
+                        points = json_2![0]!.AsArray().Select(json_3 => new PointF(((float)json_3![0]! - 120f) * 20f, (50f - (float)json_3[1]!) * 20f)).ToArray();
+                        if (points.Length > 2)
+                            gp_map.AddPolygon(points);
+                    }
             }
-            g.FillPath(new SolidBrush(Color.FromArgb(0, 255, 0)), gp_map);
+            g.FillPath(new SolidBrush(backColor), gp_map);
 
             g.DrawPath(pen_border, gp_border);
+
+            /*
+            var centerTextSize = g.MeasureString("現在のデータではありません", new Font("Yu Gothic UI", 30));
+            g.DrawString("現在のデータではありません", new Font("Yu Gothic UI", 30), Brushes.White, 300 - centerTextSize.Width / 2, 300 - centerTextSize.Height / 2);
+            */
+
+            g.DrawString($"地図データ: 気象庁    {(data.ReceiveTime == DateTime.MinValue ? "": data.ReceiveTime):yyMMddHHmm} {(data.AnnouncementTime == DateTime.MinValue ? "" : data.AnnouncementTime):yyMMddHHmm}", new Font("Yu Gothic UI", 12), Brushes.White, 0, 0);
 
             return bitmap;
         }
@@ -137,9 +167,26 @@ namespace TsunamiWarningOverlay
         }
 
 
+        private void DisplayON()
+        {
+            Ti_ViewChange.Enabled = true;
+        }
+
+        private void DisplayOFF()
+        {
+            Ti_ViewChange.Enabled = false;
+            PB_Main.Image = null;
+        }
+
+
+        internal bool isDisplayON = false;
         private void Ti_ViewChange_Tick(object sender, EventArgs e)
         {
-
+            isDisplayON = !isDisplayON;
+            if (isDisplayON)
+                PB_Main.Image = img_main;
+            else
+                PB_Main.Image = img_noData;
         }
     }
 }

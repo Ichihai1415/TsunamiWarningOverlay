@@ -52,8 +52,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.Black;
             ClientSize = new Size(600, 600);
             Controls.Add(PB_Main);
+            ForeColor = SystemColors.Control;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "Form1";
             Text = "TsunamiWarningOverlay";
