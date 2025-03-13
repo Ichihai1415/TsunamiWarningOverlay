@@ -62,6 +62,16 @@ namespace TsunamiWarningOverlay.Properties {
         
         /// <summary>
         ///   {&quot;type&quot;:&quot;FeatureCollection&quot;, &quot;features&quot;: [
+        ///{&quot;type&quot;:&quot;Feature&quot;,&quot;geometry&quot;:{&quot;type&quot;:&quot;MultiPolygon&quot;,&quot;coordinates&quot;:[[[[139.34083069987696,41.525104946236354],[139.33467128365294,41.51452835959617],[139.34048243831398,41.49510822486474],[139.37218730230222,41.50140153215506],[139.38306730221427,41.507621747945336],[139.37590144029934,41.52251217109989],[139.34083069987696,41.525104946236354]]],[[[139.55969949403652,42.24941866673811],[139.53661277565914,42.232684440934236],[139.47272385202416,42.22198387375681],[1 [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string AreaForecastEEW_GIS_20190125_01 {
+            get {
+                return ResourceManager.GetString("AreaForecastEEW_GIS_20190125_01", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   {&quot;type&quot;:&quot;FeatureCollection&quot;, &quot;features&quot;: [
         ///{&quot;type&quot;:&quot;Feature&quot;,&quot;geometry&quot;:{&quot;type&quot;:&quot;LineString&quot;,&quot;coordinates&quot;:[[141.93666092056515,45.522949505215536],[141.96142194636582,45.51049583831235],[141.96976277613123,45.48256146833717],[141.99281277608884,45.46265389206354],[142.0187905585375,45.45356444144585],[142.02429583758294,45.43675138646739],[142.03513583654967,45.42955138718685],[142.03350116764489,45.419934666751544],[142.04202444916905,45.40890777517376],[142.0632405579055,45.393630837792955],[142.16910972 [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string AreaTsunami_GIS_20240520_01 {
