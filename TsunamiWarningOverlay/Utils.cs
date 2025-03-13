@@ -65,7 +65,7 @@
             public bool Enable_AntiAlias { get; set; } = true;
 
             /// <summary>
-            /// 時刻表示を有効にするか
+            /// 発表・受信時刻表示を有効にするか
             /// </summary>
             public bool Enable_DisplayTime { get; set; } = true;
 
