@@ -1,4 +1,5 @@
 using System.Drawing.Drawing2D;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using TsunamiWarningOverlay.Properties;
 using static TsunamiWarningOverlay.Utils;
@@ -7,19 +8,21 @@ namespace TsunamiWarningOverlay
 {
     public partial class Form1 : Form
     {
+        internal static readonly JsonSerializerOptions jsonOptions = new() { WriteIndented = true };
+
         /// <summary>
         /// 初期化時処理(1)
         /// </summary>
         public Form1()
         {
+            config = File.Exists("config.json") ? JsonSerializer.Deserialize<Config>(File.ReadAllText("config.json"))! : new Config();
+            File.WriteAllText("config.json", JsonSerializer.Serialize(config, jsonOptions));
+
             InitializeComponent();
-
-
-
-
-
-            //BackColor = backColor;
         }
+
+
+        internal static Config config = new();
 
         /// <summary>
         /// 日本地図用ペン
@@ -54,7 +57,8 @@ namespace TsunamiWarningOverlay
             img_noData = DrawData(new Data());
 
             await GetChangeP2PQData();
-                
+
+            Ti_ViewChange.Interval = config.ViewChangeSpan;
 
             //DEBUG
 
@@ -76,7 +80,7 @@ namespace TsunamiWarningOverlay
         /// <summary>
         /// 日本線色・文字色(未使用)
         /// </summary>
-        internal static Color foreColor = Color.FromArgb(255,255,255);
+        internal static Color foreColor = Color.FromArgb(255, 255, 255);
 
         /// <summary>
         /// 背景色
@@ -95,10 +99,12 @@ namespace TsunamiWarningOverlay
             var bitmap = new Bitmap(600, 600);
             using var g = Graphics.FromImage(bitmap);
             g.Clear(backColor);
-            
 
-            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            g.SmoothingMode = SmoothingMode.HighQuality;
+            if (config.Enable_AntiAlias)
+            {
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+            }
 
             //最初に置いとくと若干いいかもしれない
             using var gp_MajorWarning = new GraphicsPath();
@@ -196,9 +202,11 @@ namespace TsunamiWarningOverlay
 
             g.DrawString("地図データ: 気象庁", new Font("Yu Gothic UI", 14), Brushes.White, 0, 0);
 
-
-            La_Times.Text = $"{(data.AnnouncementTime == DateTime.MinValue ? "" : data.AnnouncementTime):yyMMddHHmm} {(data.ReceiveTime == DateTime.MinValue ? "" : data.ReceiveTime):yyMMddHHmm}";
-            La_Times.Location = new Point(600 - La_Times.Size.Width, 600 - La_Times.Size.Height);
+            if (config.Enable_DisplayTime)
+            {
+                La_Times.Text = $"{(data.AnnouncementTime == DateTime.MinValue ? "" : data.AnnouncementTime):yyMMddHHmm} {(data.ReceiveTime == DateTime.MinValue ? "" : data.ReceiveTime):yyMMddHHmm}";
+                La_Times.Location = new Point(600 - La_Times.Size.Width, 600 - La_Times.Size.Height);
+            }
 
             return bitmap;
         }
@@ -250,7 +258,8 @@ namespace TsunamiWarningOverlay
         internal async Task GetChangeP2PQData()
         {
             var res = await client.GetAsync("https://api.p2pquake.net/v2/history?codes=552&limit=1");
-            //var res = await client.GetAsync("https://api-v2-sandbox.p2pquake.net/v2/history?codes=552&limit=1&offset=1");//sandboxテスト
+            //DEBUG(sandbox)
+            //var res = await client.GetAsync("https://api-v2-sandbox.p2pquake.net/v2/history?codes=552&limit=1&offset=1");
             if (res == null) return;//基本ない
             var resSt = await res.Content.ReadAsStringAsync();
             if (resSt == null) return;//基本ない
@@ -276,11 +285,13 @@ namespace TsunamiWarningOverlay
         }
 
         /// <summary>
-        /// 表示を開始します
+        /// 表示を開始します。
         /// </summary>
         private void DisplayStart()
         {
             Ti_ViewChange.Enabled = true;
+            PB_Main.Image = img_main;
+            isDisplayON = true;
         }
 
         /// <summary>
@@ -290,10 +301,11 @@ namespace TsunamiWarningOverlay
         {
             Ti_ViewChange.Enabled = false;
             PB_Main.Image = null;
+            isDisplayON = false;
         }
 
         /// <summary>
-        /// 点滅で表示モードであるか
+        /// 表示モードであるか
         /// </summary>
         internal bool isDisplayON = false;
 
@@ -302,6 +314,8 @@ namespace TsunamiWarningOverlay
         /// </summary>
         private void Ti_ViewChange_Tick(object sender, EventArgs e)
         {
+            if (!config.Enable_ViewChange)
+                return;
             isDisplayON = !isDisplayON;
             if (isDisplayON)
                 PB_Main.Image = img_main;

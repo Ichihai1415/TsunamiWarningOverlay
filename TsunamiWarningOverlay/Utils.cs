@@ -32,10 +32,9 @@
             MajorWarning = 4
         }
 
-
-
-
-
+        /// <summary>
+        /// データ格納クラス
+        /// </summary>
         public class Data
         {
             /// <summary>
@@ -54,9 +53,31 @@
             public Dictionary<string, TsunamiGrade> AreaDatas { get; set; } = [];
         }
 
+        /// <summary>
+        /// 設定格納クラス
+        /// </summary>
         public class Config
         {
 
+            /// <summary>
+            /// アンチエイリアスを有効にするか
+            /// </summary>
+            public bool Enable_AntiAlias { get; set; } = true;
+
+            /// <summary>
+            /// 時刻表示を有効にするか
+            /// </summary>
+            public bool Enable_DisplayTime { get; set; } = true;
+
+            /// <summary>
+            /// 表示点滅を有効にするか
+            /// </summary>
+            public bool Enable_ViewChange { get; set; } = true;
+
+            /// <summary>
+            /// 表示点滅の間隔
+            /// </summary>
+            public int ViewChangeSpan { get; set; } = 2000;
         }
     }
 }
