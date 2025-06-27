@@ -10,6 +10,8 @@ OBS“™Œü‚¯‚ÉŠÈˆÕ’Ã”g’n}‚ð•`‰æ‚µ‚Ü‚·B
 
 TsunamiWarningOverlay.exe‚ð‹N“®‚·‚é‚¾‚¯‚Å—Ç‚¢‚Å‚·B**î•ñ‚ª”­•\‚³‚ê‚Ä‚¢‚È‚¢Žž‚Í‰½‚à•\Ž¦‚³‚ê‚Ü‚¹‚ñB** OBS“™‚Å•(RGB:`(0, 0, 0)`)‚ðƒNƒƒ}ƒL[‚ÉÝ’è‚µ‚Ä‚­‚¾‚³‚¢B
 
+ˆÈ‰º‚ÌÝ’èA‚»‚Ì‘¼‹@”\‚È‚Ç‚àŠm”F‚µ‚Ä‚­‚¾‚³‚¢B
+
 ## Žd—l
 
 ’n}ƒf[ƒ^: ‹CÛ’¡(‰ÁH‚µ‚Ä“à•”ƒŠƒ\[ƒX‚ÉŠi”[)
@@ -20,14 +22,37 @@ TsunamiWarningOverlay.exe‚ð‹N“®‚·‚é‚¾‚¯‚Å—Ç‚¢‚Å‚·B**î•ñ‚ª”­•\‚³‚ê‚Ä‚¢‚È‚¢Žž‚Í‰
 
 ## Ý’è
 
-Ý’è‚Í‰‰ñ‹N“®Žž‚É¶¬‚³‚êAƒ\ƒtƒg‹N“®Žž‚É“Ç‚Ýž‚Ü‚ê‚Ü‚·B”½‰f‚³‚¹‚½‚¢ê‡Ä‹N“®‚µ‚Ä‚­‚¾‚³‚¢B
+Ý’è‚Í‰‰ñ‹N“®Žž‚É¶¬‚³‚êAƒ\ƒtƒg‹N“®Žž‚É“Ç‚Ýž‚Ü‚ê‚Ü‚·B”½‰f‚³‚¹‚½‚¢ê‡Ä‹N“®‚µ‚Ä‚­‚¾‚³‚¢BF‚Í`"Red,Green,Blue"`‚Å‚·B
 
 - `Enable_AntiAlias`: ƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚ð—LŒø‚É‚·‚é‚©
 - `Enable_DisplayTime`: ”­•\EŽóMŽž•\Ž¦‚ð—LŒø‚É‚·‚é‚©
 - `Enable_ViewChange`: •\Ž¦“_–Å‚ð—LŒø‚É‚·‚é‚©
-- `ViewChangeSpan`: •\Ž¦“_–Å‚ÌŠÔŠu
+- `ViewChangeSpan`: •\Ž¦“_–Å‚ÌŠÔŠu(ƒ~ƒŠ•b)
+- `WindowSize`: ƒEƒBƒ“ƒhƒEA•`‰æƒTƒCƒY
+- `Enable_TopMostTransparent`: Å‘O–Ê‚É”wŒi“§–¾‰»‚µ‚Ä•\Ž¦‚·‚é‚©
+- `Color_Foreground`: “ú–{’n}‚Ìü‚ÌFA•¶ŽšF
+- `Color_Background`: ”wŒiF
+- `Color_MapFill`: “ú–{’n}‚Ì“h‚è‚Â‚Ô‚µF
+
+## ‚»‚Ì‘¼‹@”\‚È‚Ç
+
+- ˆê•”‚ÌƒGƒ‰[‚Í`log-error.txt`‚É•Û‘¶‚³‚ê‚Ü‚·(–ˆ‰ñã‘‚«)B
+- ‰EƒNƒŠƒbƒNƒƒjƒ…[‚ÉÄ‹N“®AI—¹‚ª‚ ‚è‚Ü‚·B
+- ‰æ–Ê(ƒ^ƒCƒgƒ‹ƒo[‚¶‚á‚È‚¢‚Ù‚¤)‚àƒ^ƒCƒgƒ‹ƒo[‚Æ“¯‚¶‚æ‚¤‚Éƒhƒ‰ƒbƒO‚ÅˆÚ“®‚Å‚«‚Ü‚·B
+- ”wŒi“§–¾ŽžAƒEƒBƒ“ƒhƒEƒ^ƒCƒgƒ‹ƒo[‚Í”ñ•\Ž¦‚É‚È‚è‚Ü‚·B‚Ü‚½”wŒiF•”•ª‚Íã‹L‚Ì‹@”\‚Ì“–‚½‚è”»’è‚ª‚ ‚è‚Ü‚¹‚ñ(‚½‚¾‚µA”wŒiF‚ª0,0,0ˆÈŠO‚¾‚Æ“§–¾•”•ª‚É‚à”­¶‚·‚é‰Â”\‚ª‚ ‚è‚Ü‚·)B
 
 # XV—š—ð
+
+## v1.0.1
+2025/06/27
+
+- ƒlƒbƒgƒGƒ‰[‚ð•\Ž¦‚µ‚È‚¢‚æ‚¤‚É
+- Å‘O–Ê‚É”wŒi“§–¾‰»‚µ‚Ä•\Ž¦‚·‚é‹@”\’Ç‰Á
+- ƒtƒH[ƒ€“à‚ðƒhƒ‰ƒbƒO‚Å“®‚©‚¹‚é‚æ‚¤‚É
+- Ý’è‚ÅFAƒTƒCƒY‚ð•Ï‚¦‚ê‚é‚æ‚¤‚É
+- “ú–{“h‚è‚Â‚Ô‚µ’Ç‰Á
+- ‰EƒNƒŠƒbƒNƒƒjƒ…[’Ç‰Á
+- •¶ŽšƒTƒCƒY”÷’²®
 
 ## v1.0.0
 2025/03/13
