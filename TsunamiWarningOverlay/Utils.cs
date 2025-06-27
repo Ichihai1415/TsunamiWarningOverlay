@@ -1,4 +1,7 @@
-﻿namespace TsunamiWarningOverlay
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace TsunamiWarningOverlay
 {
     /// <summary>
     /// 内部クラス等
@@ -58,7 +61,6 @@
         /// </summary>
         public class Config
         {
-
             /// <summary>
             /// アンチエイリアスを有効にするか
             /// </summary>
@@ -67,7 +69,7 @@
             /// <summary>
             /// 発表・受信時刻表示を有効にするか
             /// </summary>
-            public bool Enable_DisplayTime { get; set; } = true;
+            public bool Enable_DisplayTime { get; set; } = false;
 
             /// <summary>
             /// 表示点滅を有効にするか
@@ -78,6 +80,56 @@
             /// 表示点滅の間隔
             /// </summary>
             public int ViewChangeSpan { get; set; } = 2000;
+
+            /// <summary>
+            /// ウィンドウコントロールサイズ
+            /// </summary>
+            public int WindowSize { get; set; } = 600;
+
+            /// <summary>
+            /// 最前面に背景色を透明化して表示するか
+            /// </summary>
+            public bool Enable_TopMostTransparent { get; set; } = false;
+
+            /// <summary>
+            /// 日本線、文字色
+            /// </summary>
+            public Color Color_Foreground { get; set; } = Color.FromArgb(255, 255, 255);
+
+            /// <summary>
+            /// 背景色
+            /// </summary>
+            public Color Color_Background { get; set; } = Color.FromArgb(0, 0, 0);
+
+            /// <summary>
+            /// 地図売りつぶし色
+            /// </summary>
+            public Color Color_MapFill { get; set; } = Color.FromArgb(127, 127, 127);
+        }
+
+        /// <summary>
+        /// ColorをJSONシリアライズ/デシアライズできるようにします。
+        /// </summary>
+        public class ColorConverter : JsonConverter<Color>
+        {
+            /// <inheritdoc/>
+            public override Color Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                var colorString = reader.GetString() ?? throw new ArgumentException("値が正しくありません。");
+                var argbValues = colorString.Split(',');
+                if (argbValues.Length == 3)
+                    return Color.FromArgb(int.Parse(argbValues[0]), int.Parse(argbValues[1]), int.Parse(argbValues[2]));
+                //else if (argbValues.Length == 4)//このソフトでは透明値は無意味のためなし
+                //    return Color.FromArgb(int.Parse(argbValues[0]), int.Parse(argbValues[1]), int.Parse(argbValues[2]), int.Parse(argbValues[3]));
+                else
+                    throw new ArgumentException("値が正しくありません。");
+            }
+
+            /// <inheritdoc/>
+            public override void Write(Utf8JsonWriter writer, Color value, JsonSerializerOptions options)
+            {
+                writer.WriteStringValue($"{value.R},{value.G},{value.B}");//{value.A}, このソフトでは透明値は無意味のためなし
+            }
         }
     }
 }
