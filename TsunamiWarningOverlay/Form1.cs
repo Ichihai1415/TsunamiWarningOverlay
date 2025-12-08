@@ -40,22 +40,22 @@ namespace TsunamiWarningOverlay
         /// <summary>
         /// 津波予報用ペン
         /// </summary>
-        internal static Pen pen_Forecast = new(Color.Blue, 3) { LineJoin = LineJoin.Round };
+        internal static Pen pen_Forecast = new(Color.Blue, 10) { LineJoin = LineJoin.Round };
 
         /// <summary>
         /// 津波注意報用ペン
         /// </summary>
-        internal static Pen pen_Watch = new(Color.Yellow, 5) { LineJoin = LineJoin.Round };
+        internal static Pen pen_Watch = new(Color.Yellow, 15) { LineJoin = LineJoin.Round };
 
         /// <summary>
         /// 津波警報用ペン
         /// </summary>
-        internal static Pen pen_Warning = new(Color.Red, 7) { LineJoin = LineJoin.Round };
+        internal static Pen pen_Warning = new(Color.Red, 20) { LineJoin = LineJoin.Round };
 
         /// <summary>
         /// 大津波警報用ペン
         /// </summary>
-        internal static Pen pen_MajorWarning = new(Color.Purple, 9) { LineJoin = LineJoin.Round };
+        internal static Pen pen_MajorWarning = new(Color.Purple, 30) { LineJoin = LineJoin.Round };
 
         /// <summary>
         /// 日本線、文字色ブラシ
